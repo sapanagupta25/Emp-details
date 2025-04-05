@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Adding Employees</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: white;
+      font-family: Arial, sans-serif;
+      padding: 40px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    input {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 5px;
+      border: none;
+      width: 180px;
+    }
+
+    #addUserBtn {
+      padding: 10px 15px;
+      margin: 5px;
+      background-color: #3c8dbc;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #addUserBtn:hover {
+      background-color: #2b6b92;
+    }
+
+    .message {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .error {
+      color: red;
+    }
+
+    .success {
+      color: #00ff00;
+    }
+
+    .employee-box {
+      background-color: #1e1e1e;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .employee-box span {
+      margin-right: 20px;
+    }
+
+    .delete-btn {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .delete-btn:hover {
+      background-color: #c0392b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>New Employees</h2>
+    <input type="text" id="name" placeholder="Enter name" />
+    <input type="text" id="profession" placeholder="Enter profession" />
+    <input type="number" id="age" placeholder="Enter age" />
+    <button id="addUserBtn" onclick="addEmployee()">Add User</button>
+    <div id="message" class="message"></div>
+
+    <h2>Added Employees:</h2>
+    <div id="employeeList">You have 0 Employees.</div>
+  </div>
+
+  <script>
+    let employees = [];
+    let nextId = 1;
+
+    function addEmployee() {
+      const name = document.getElementById('name').value.trim();
+      const profession = document.getElementById('profession').value.trim();
+      const age = document.getElementById('age').value.trim();
+      const messageDiv = document.getElementById('message');
+
+      if (!name || !profession || !age) {
+        messageDiv.textContent = 'Error: Please Make sure All the fields are filled before adding in an employee !';
+        messageDiv.className = 'message error';
+        return;
+      }
+
+      const employee = {
+        id: nextId++,
+        name,
+        profession,
+        age: Number(age),
+      };
+
+      employees.push(employee);
+      messageDiv.textContent = 'Success: Employee Added!';
+      messageDiv.className = 'message success';
+
+      // Clear fields
+      document.getElementById('name').value = '';
+      document.getElementById('profession').value = '';
+      document.getElementById('age').value = '';
+
+      renderEmployees();
+    }
+
+    function deleteEmployee(id) {
+      employees = employees.filter(emp => emp.id !== id);
+      renderEmployees();
+    }
+
+    function renderEmployees() {
+      const list = document.getElementById('employeeList');
+      if (employees.length === 0) {
+        list.innerHTML = 'You have 0 Employees.';
+        return;
+      }
+
+      list.innerHTML = '';
+      employees.forEach(emp => {
+        const div = document.createElement('div');
+        div.className = 'employee-box';
+        div.innerHTML = `
+          <span>${emp.id}. ${emp.name} - ${emp.profession} - ${emp.age}</span>
+          <button class="delete-btn" onclick="deleteEmployee(${emp.id})">Delete</button>
+        `;
+        list.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>
